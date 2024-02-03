@@ -6,10 +6,7 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@ToString
-public class GoogleIdUserDto {
-    private String name;
-    private String email;
-    private String picture;
-
+@ToString(callSuper = true)
+public class UserRegistrationInfoDto extends UserDto{
+    private String password;
 }

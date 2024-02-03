@@ -1,6 +1,5 @@
 package com.iishanto.easycontactfinderbackend.dto.responseDtoImpl;
 
-import com.iishanto.easycontactfinderbackend.dto.Error;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
