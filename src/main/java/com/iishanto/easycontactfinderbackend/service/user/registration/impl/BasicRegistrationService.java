@@ -21,8 +21,10 @@ public class BasicRegistrationService implements RegistrationService {
     @Override
     public UserDto registerGoogle(UserRegistrationInfoDto userRegistrationInfoDto, UserCredentialDto userCredentialDto) throws RegistrationFailureException {
         if(userRepository.findByEmail(userCredentialDto.getEmail())!=null) throw new RegistrationFailureException("User already exists. Please login!");
+        System.out.println(userRegistrationInfoDto);
         User user=modelMapper.map(userRegistrationInfoDto,User.class);
         user.setUsedSocialLogin(true);
+        user.setPassword(passwordEncoder.encode("<no-pass-guaranteed>"));
         userRepository.save(user);
         return modelMapper.map(user,UserDto.class);
     }

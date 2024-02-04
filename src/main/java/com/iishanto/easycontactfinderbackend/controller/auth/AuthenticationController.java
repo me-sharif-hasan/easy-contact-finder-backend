@@ -42,11 +42,16 @@ public class AuthenticationController {
         try{
             googleCredentialDto=new ObjectMapper().readValue(requestBody,UserCredentialDto.class);
             User user=userService.loginWithGoogle(googleCredentialDto).getUser();
+            String token=userService.getToken(user);
             UserDto userDto=modelMapper.map(user,UserDto.class);
-            return new ResponseEntity<>(userDto, HttpStatus.OK);
+            LoginSuccessMessageDto loginSuccessMessageDto=new LoginSuccessMessageDto();
+            loginSuccessMessageDto.setToken(token);
+            loginSuccessMessageDto.setUser(userDto);
+            return new ResponseEntity<>(loginSuccessMessageDto, HttpStatus.OK);
         }catch (UserNotExistsException e){
             if (googleCredentialDto==null) throw new LoginCredentialVerificationFailureException("Login failure, also can't get credential from google");
             UserRegistrationInfoDto userDto=e.getUserRegistrationInfoDto();
+            System.out.println("Err: "+userDto);
             userService.registerWithGoogle(userDto,googleCredentialDto);
             RegistrationSuccess registrationSuccess=new RegistrationSuccess("You have successfully registered!");
             registrationSuccess.setSkipLogin(true);
