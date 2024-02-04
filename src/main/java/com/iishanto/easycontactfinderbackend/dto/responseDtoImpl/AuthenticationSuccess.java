@@ -1,14 +1,15 @@
 package com.iishanto.easycontactfinderbackend.dto.responseDtoImpl;
 
 import com.iishanto.easycontactfinderbackend.dto.UserDto;
+import com.iishanto.easycontactfinderbackend.model.User;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 public class AuthenticationSuccess extends Success{
-    private UserDto userDto;
     private String token;
+    private User user;
     public AuthenticationSuccess(String msg){
         super(msg);
     }

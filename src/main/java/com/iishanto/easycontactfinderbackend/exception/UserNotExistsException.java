@@ -1,13 +1,15 @@
 package com.iishanto.easycontactfinderbackend.exception;
 
 import com.iishanto.easycontactfinderbackend.dto.UserDto;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import com.iishanto.easycontactfinderbackend.dto.UserRegistrationInfoDto;
+import lombok.*;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
 @ToString
 public class UserNotExistsException extends Throwable {
-    private UserDto userDto;
+    public UserNotExistsException(String message){
+        super(message);
+    }
+    private UserRegistrationInfoDto userRegistrationInfoDto;
 }

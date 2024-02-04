@@ -14,6 +14,7 @@ import com.iishanto.easycontactfinderbackend.service.user.auth.email.EmailAuthSe
 import com.iishanto.easycontactfinderbackend.service.user.auth.google.GoogleAuthServices;
 import com.iishanto.easycontactfinderbackend.service.user.UserService;
 import com.iishanto.easycontactfinderbackend.service.user.registration.RegistrationService;
+import com.iishanto.easycontactfinderbackend.service.user.security.JwtService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -24,37 +25,42 @@ public class UserServiceImpl implements UserService {
     private final RegistrationService registrationService;
     private final EmailAuthService emailAuthService;
     private final UserRepository userRepository;
+    private final JwtService jwtService;
 
     @Override
-    public UserDto registerWithGoogle(UserDto userDto) throws RegistrationFailureException {
-        return registrationService.registerGoogle(userDto);
+    public UserDto registerWithGoogle(UserRegistrationInfoDto userRegistrationInfoDto,UserCredentialDto userCredentialDto) throws RegistrationFailureException {
+        return registrationService.registerGoogle(userRegistrationInfoDto,userCredentialDto);
     }
 
     @Override
     public AuthenticationSuccess loginWithGoogle(UserCredentialDto userCredentialDto) throws LoginCredentialVerificationFailureException, UserNotExistsException {
-        UserDto userDto = googleAuthServices.verifyCredential(userCredentialDto);
+        User user = googleAuthServices.verifyCredential(userCredentialDto);
         AuthenticationSuccess authenticationSuccess=new AuthenticationSuccess("Google authentication successful");
-        authenticationSuccess.setUserDto(userDto);
+        authenticationSuccess.setUser(user);
         return authenticationSuccess;
     }
 
     @Override
     public RegistrationSuccess registerWithEmail(UserRegistrationInfoDto userInformationDto) throws RegistrationFailureException {
         UserDto userDto=registrationService.registerEmailUser(userInformationDto);
-        RegistrationSuccess registrationSuccess=new RegistrationSuccess("You are successfully registered!");
-        return registrationSuccess;
+        return new RegistrationSuccess("You are successfully registered!");
     }
 
     @Override
     public AuthenticationSuccess loginWithEmail(UserCredentialDto userCredentialDto) throws LoginCredentialVerificationFailureException, UserNotExistsException {
-        UserDto userDto=emailAuthService.verifyCredential(userCredentialDto);
+        User user=emailAuthService.verifyCredential(userCredentialDto);
         AuthenticationSuccess authenticationSuccess=new AuthenticationSuccess("Login successful");
-        authenticationSuccess.setUserDto(userDto);
+        authenticationSuccess.setUser(user);
         return authenticationSuccess;
     }
 
     @Override
     public Boolean findUserByEmail(String email) {
         return userRepository.findByEmail(email)!=null;
+    }
+
+    @Override
+    public String getToken(User user) {
+        return jwtService.generateToken(user);
     }
 }

@@ -3,6 +3,7 @@ package com.iishanto.easycontactfinderbackend.controller.auth;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.iishanto.easycontactfinderbackend.dto.LoginSuccessMessageDto;
 import com.iishanto.easycontactfinderbackend.dto.UserDto;
 import com.iishanto.easycontactfinderbackend.dto.UserCredentialDto;
 import com.iishanto.easycontactfinderbackend.dto.UserRegistrationInfoDto;
@@ -13,17 +14,18 @@ import com.iishanto.easycontactfinderbackend.dto.responseDtoImpl.RegistrationSuc
 import com.iishanto.easycontactfinderbackend.exception.LoginCredentialVerificationFailureException;
 import com.iishanto.easycontactfinderbackend.exception.RegistrationFailureException;
 import com.iishanto.easycontactfinderbackend.exception.UserNotExistsException;
+import com.iishanto.easycontactfinderbackend.model.User;
 import com.iishanto.easycontactfinderbackend.service.user.auth.google.GoogleAuthServices;
 import com.iishanto.easycontactfinderbackend.service.user.UserService;
 import com.iishanto.easycontactfinderbackend.service.user.registration.RegistrationService;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
@@ -31,16 +33,21 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthenticationController {
     private final GoogleAuthServices googleAuthServices;
     private final UserService userService;
+    private final ModelMapper modelMapper;
+
     @PostMapping(path = "/with-google")
     public ResponseEntity <Object> loginWithGoogle(@RequestBody String requestBody){
         AuthenticationErrorDto authenticationErrorDto=new AuthenticationErrorDto();
+        UserCredentialDto googleCredentialDto=null;
         try{
-            UserCredentialDto googleCredentialDto=new ObjectMapper().readValue(requestBody,UserCredentialDto.class);
-            UserDto userDto=userService.loginWithGoogle(googleCredentialDto).getUserDto();
+            googleCredentialDto=new ObjectMapper().readValue(requestBody,UserCredentialDto.class);
+            User user=userService.loginWithGoogle(googleCredentialDto).getUser();
+            UserDto userDto=modelMapper.map(user,UserDto.class);
             return new ResponseEntity<>(userDto, HttpStatus.OK);
         }catch (UserNotExistsException e){
-            UserDto userDto=e.getUserDto();
-            userService.registerWithGoogle(userDto);
+            if (googleCredentialDto==null) throw new LoginCredentialVerificationFailureException("Login failure, also can't get credential from google");
+            UserRegistrationInfoDto userDto=e.getUserRegistrationInfoDto();
+            userService.registerWithGoogle(userDto,googleCredentialDto);
             RegistrationSuccess registrationSuccess=new RegistrationSuccess("You have successfully registered!");
             registrationSuccess.setSkipLogin(true);
             return new ResponseEntity<>(registrationSuccess,HttpStatus.OK);
@@ -59,8 +66,11 @@ public class AuthenticationController {
         AuthenticationErrorDto authenticationErrorDto=new AuthenticationErrorDto();
         try{
             AuthenticationSuccess authenticationSuccess=userService.loginWithEmail(loginCredentialDto);
-            System.out.println(authenticationSuccess);
-            return new ResponseEntity<>(authenticationSuccess,HttpStatus.OK);
+            String token=userService.getToken(authenticationSuccess.getUser());
+            LoginSuccessMessageDto loginSuccessMessageDto=new LoginSuccessMessageDto();
+            loginSuccessMessageDto.setUser(modelMapper.map(authenticationSuccess.getUser(),UserDto.class));
+            loginSuccessMessageDto.setToken(token);
+            return new ResponseEntity<>(loginSuccessMessageDto,HttpStatus.OK);
         }catch (LoginCredentialVerificationFailureException | UserNotExistsException e){
             authenticationErrorDto.setMessage(e.getMessage());
             return new ResponseEntity<>(authenticationErrorDto,HttpStatus.UNAUTHORIZED);
@@ -78,5 +88,10 @@ public class AuthenticationController {
             registrationError.setMessage("Registration failed!");
             return new ResponseEntity<>(registrationError,HttpStatus.CONFLICT);
         }
+    }
+
+    @GetMapping("test")
+    public String test(){
+        return "SUccess";
     }
 }
