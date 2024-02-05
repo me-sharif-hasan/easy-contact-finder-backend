@@ -55,10 +55,15 @@ public class User implements UserDetails {
     private Boolean usedSocialLogin=false;
 
     private String picture=null;
-    @OneToMany
+
+    @OneToMany(fetch = FetchType.EAGER)
     private Set <Phone> phones;
     @ManyToMany(fetch = FetchType.EAGER)
     private Set <Role> roles;
+
+    @OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    private UserVerification userVerification;
+
 
 
     @Override

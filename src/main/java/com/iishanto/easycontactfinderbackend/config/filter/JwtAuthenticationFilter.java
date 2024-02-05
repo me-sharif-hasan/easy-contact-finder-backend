@@ -31,15 +31,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
-//            throw new IOException("Bearer token missing");
         }
 
         try {
             final String jwt = authHeader.substring(7);
-            final String userEmail = jwtService.extractUsername(jwt);
+            String userEmail=null;
+            try {
+                userEmail=jwtService.extractUsername(jwt);
+            }catch (Throwable e){
+                throw new Exception("JWT token expired!");
+            }
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//            System.out.println("AUTH "+authentication.isAuthenticated());
-
+            System.out.println("PROCEEDING");
             if (userEmail != null && authentication == null) {
                 UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
                 if (jwtService.isTokenValid(jwt, userDetails)) {
@@ -59,8 +62,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
 
         } catch (Exception exception) {
+            System.out.println(exception.getLocalizedMessage());
             exception.printStackTrace();
-            handlerExceptionResolver.resolveException(request, response, null, exception);
+            filterChain.doFilter(request,response);
         }
 
     }

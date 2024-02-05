@@ -24,4 +24,7 @@ public class Phone {
     @Column(nullable = false)
     @ColumnDefault("false")
     private Boolean isHidden=false;
+
+    @OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    private PhoneVerification phoneVerification;
 }
