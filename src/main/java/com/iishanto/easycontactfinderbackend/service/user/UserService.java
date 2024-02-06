@@ -3,6 +3,7 @@ package com.iishanto.easycontactfinderbackend.service.user;
 import com.iishanto.easycontactfinderbackend.dto.UserCredentialDto;
 import com.iishanto.easycontactfinderbackend.dto.UserDto;
 import com.iishanto.easycontactfinderbackend.dto.UserRegistrationInfoDto;
+import com.iishanto.easycontactfinderbackend.dto.request.UserVerificationCodeRequestDto;
 import com.iishanto.easycontactfinderbackend.dto.responseDtoImpl.AuthenticationSuccess;
 import com.iishanto.easycontactfinderbackend.dto.responseDtoImpl.RegistrationSuccess;
 import com.iishanto.easycontactfinderbackend.exception.LoginCredentialVerificationFailureException;
@@ -19,6 +20,8 @@ public interface UserService {
     RegistrationSuccess registerWithEmail(UserRegistrationInfoDto userInformationDto) throws RegistrationFailureException;
     AuthenticationSuccess loginWithEmail(UserCredentialDto userCredentialDto) throws LoginCredentialVerificationFailureException, UserNotExistsException;
 
-    Boolean findUserByEmail(String email);
+    User findUserByEmail(String email);
     String getToken(User user);
+
+    Boolean verify(UserVerificationCodeRequestDto userVerificationCodeRequestDto) throws UserNotExistsException;
 }

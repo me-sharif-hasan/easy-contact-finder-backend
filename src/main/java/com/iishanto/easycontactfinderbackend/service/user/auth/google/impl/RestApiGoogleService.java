@@ -30,14 +30,16 @@ public class RestApiGoogleService implements GoogleAuthServices {
         RestClient restClient=RestClient.create();
         try {
             String verificationUrl = "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=" + googleCredentialDto.getToken();
-            User response=restClient.get().uri(verificationUrl).retrieve().body(User.class);
+            UserDto response=restClient.get().uri(verificationUrl).retrieve().body(UserDto.class);
             if(response==null) throw new LoginCredentialVerificationFailureException("Google authentication failed due to network error.");
-            if (userRepository.findByEmail(response.getEmail())==null){
+            User user=userRepository.findByEmail(response.getEmail());
+            if (user==null){
                 UserNotExistsException userNotExistsException=new UserNotExistsException("User not found");
                 userNotExistsException.setUserRegistrationInfoDto(modelMapper.map(response,UserRegistrationInfoDto.class));
                 throw userNotExistsException;
             }else{
-                return response;
+                System.out.println(user);
+                return user;
             }
         } catch (Throwable e) {
             throw e;

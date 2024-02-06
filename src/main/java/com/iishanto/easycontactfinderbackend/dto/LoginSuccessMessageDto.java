@@ -6,5 +6,5 @@ import org.springframework.context.annotation.Primary;
 public class LoginSuccessMessageDto {
     private String status="success";
     private String token;
-    private UserDto user;
+    private UserDto data;
 }

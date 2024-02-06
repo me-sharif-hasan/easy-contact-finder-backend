@@ -5,6 +5,7 @@ import com.iishanto.easycontactfinderbackend.dto.UserDto;
 import com.iishanto.easycontactfinderbackend.dto.UserRegistrationInfoDto;
 import com.iishanto.easycontactfinderbackend.exception.RegistrationFailureException;
 import com.iishanto.easycontactfinderbackend.model.User;
+import com.iishanto.easycontactfinderbackend.model.UserVerification;
 import com.iishanto.easycontactfinderbackend.repository.UserRepository;
 import com.iishanto.easycontactfinderbackend.service.user.registration.RegistrationService;
 import lombok.AllArgsConstructor;
@@ -25,6 +26,9 @@ public class BasicRegistrationService implements RegistrationService {
         User user=modelMapper.map(userRegistrationInfoDto,User.class);
         user.setUsedSocialLogin(true);
         user.setPassword(passwordEncoder.encode("<no-pass-guaranteed>"));
+        UserVerification userVerification=new UserVerification();
+        userVerification.setState("verified");
+        user.setUserVerification(userVerification);
         userRepository.save(user);
         return modelMapper.map(user,UserDto.class);
     }

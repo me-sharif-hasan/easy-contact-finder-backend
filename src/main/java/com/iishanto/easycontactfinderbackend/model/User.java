@@ -1,5 +1,6 @@
 package com.iishanto.easycontactfinderbackend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
@@ -18,7 +19,7 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@ToString
+
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -57,6 +58,7 @@ public class User implements UserDetails {
     private String picture=null;
 
     @OneToMany(fetch = FetchType.EAGER)
+    @JsonBackReference
     private Set <Phone> phones;
     @ManyToMany(fetch = FetchType.EAGER)
     private Set <Role> roles;

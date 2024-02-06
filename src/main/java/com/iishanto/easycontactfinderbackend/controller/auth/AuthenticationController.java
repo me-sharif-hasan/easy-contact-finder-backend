@@ -39,28 +39,35 @@ public class AuthenticationController {
     public ResponseEntity <Object> loginWithGoogle(@RequestBody String requestBody){
         AuthenticationErrorDto authenticationErrorDto=new AuthenticationErrorDto();
         UserCredentialDto googleCredentialDto=null;
+        System.out.println("Trying google login");
         try{
             googleCredentialDto=new ObjectMapper().readValue(requestBody,UserCredentialDto.class);
             User user=userService.loginWithGoogle(googleCredentialDto).getUser();
             String token=userService.getToken(user);
             UserDto userDto=modelMapper.map(user,UserDto.class);
+            System.out.println("Number of phones: "+userDto.getPhones().size());
             LoginSuccessMessageDto loginSuccessMessageDto=new LoginSuccessMessageDto();
             loginSuccessMessageDto.setToken(token);
-            loginSuccessMessageDto.setUser(userDto);
+            loginSuccessMessageDto.setData(userDto);
+            System.out.println("READY, not returning");
             return new ResponseEntity<>(loginSuccessMessageDto, HttpStatus.OK);
         }catch (UserNotExistsException e){
+            e.printStackTrace();
             if (googleCredentialDto==null) throw new LoginCredentialVerificationFailureException("Login failure, also can't get credential from google");
             UserRegistrationInfoDto userDto=e.getUserRegistrationInfoDto();
             System.out.println("Err: "+userDto);
             userService.registerWithGoogle(userDto,googleCredentialDto);
             RegistrationSuccess registrationSuccess=new RegistrationSuccess("You have successfully registered!");
             registrationSuccess.setSkipLogin(true);
+            registrationSuccess.setData(userDto);
             return new ResponseEntity<>(registrationSuccess,HttpStatus.OK);
         } catch (LoginCredentialVerificationFailureException e){
+            e.printStackTrace();
             authenticationErrorDto.setMessage("Google authentication failed!");
             authenticationErrorDto.setException(e);
             return new ResponseEntity<>(authenticationErrorDto,HttpStatus.UNAUTHORIZED);
         } catch (Throwable e) {
+            e.printStackTrace();
             authenticationErrorDto.setMessage("Bad formatted json data");
             return new ResponseEntity<>(authenticationErrorDto,HttpStatus.BAD_REQUEST);
         }
@@ -73,7 +80,7 @@ public class AuthenticationController {
             AuthenticationSuccess authenticationSuccess=userService.loginWithEmail(loginCredentialDto);
             String token=userService.getToken(authenticationSuccess.getUser());
             LoginSuccessMessageDto loginSuccessMessageDto=new LoginSuccessMessageDto();
-            loginSuccessMessageDto.setUser(modelMapper.map(authenticationSuccess.getUser(),UserDto.class));
+            loginSuccessMessageDto.setData(modelMapper.map(authenticationSuccess.getUser(),UserDto.class));
             loginSuccessMessageDto.setToken(token);
             return new ResponseEntity<>(loginSuccessMessageDto,HttpStatus.OK);
         }catch (LoginCredentialVerificationFailureException | UserNotExistsException e){

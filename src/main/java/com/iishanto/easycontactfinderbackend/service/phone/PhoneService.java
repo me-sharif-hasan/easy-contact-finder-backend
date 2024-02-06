@@ -1,4 +1,4 @@
-package com.iishanto.easycontactfinderbackend.service.user.phone;
+package com.iishanto.easycontactfinderbackend.service.phone;
 
 import com.iishanto.easycontactfinderbackend.dto.phoneVerification.PhoneVerificationCodeSendSuccessfulResponseDto;
 import com.iishanto.easycontactfinderbackend.dto.phoneVerification.PhoneVerificationRequestReceiverDto;
@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -19,6 +20,8 @@ import java.util.Optional;
 public class PhoneService {
     private PhoneRepository phoneRepository;
     private UserRepository userRepository;
+
+
     public PhoneVerificationCodeSendSuccessfulResponseDto sendVerificationCode(PhoneVerificationRequestReceiverDto phoneVerificationRequestReceiverDto){
         String phoneNumber=phoneVerificationRequestReceiverDto.getPhone();
         Optional<Phone> phone=phoneRepository.findPhoneByNumber(phoneNumber);
@@ -30,6 +33,7 @@ public class PhoneService {
             if(user==null) throw new InvalidRequestStateException("Invalid request, authentication failed");
             Phone newPhone=new Phone();
             newPhone.setNumber(phoneNumber);
+            newPhone.setOwner(user);
             //retrieve other info if needed
             phoneRepository.save(newPhone);
             authPhone=newPhone;
@@ -47,4 +51,24 @@ public class PhoneService {
         phoneRepository.save(authPhone);
         return new PhoneVerificationCodeSendSuccessfulResponseDto("success","A code is send in your phone number");
     }
+
+    public Boolean verify(PhoneVerificationRequestReceiverDto dto) {
+        Optional <Phone> phoneOptional=phoneRepository.findPhoneByNumber(dto.getPhone());
+        if(phoneOptional.isEmpty()) return false;
+        Phone phone=phoneOptional.get();
+        PhoneVerification phoneVerification=phone.getPhoneVerification();
+        System.out.println(phoneVerification.getCode()+" "+phoneVerification.getStatus()+" "+dto.getCode());
+        if(!(phoneVerification.getStatus().equals("unverified")&& Objects.equals(phoneVerification.getCode(), dto.getCode()))){
+            return false;
+        }else{
+            phoneVerification.setStatus("verified");
+            phone.setPhoneVerification(phoneVerification);
+            phoneRepository.save(phone);
+            return true;
+        }
+    }
+
+//    public Boolean finalize(){
+//        return null;
+//    }
 }

@@ -3,10 +3,14 @@ package com.iishanto.easycontactfinderbackend.dto.phoneVerification;
 import com.iishanto.easycontactfinderbackend.dto.ResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@AllArgsConstructor
+@NoArgsConstructor
 public class PhoneVerificationCodeSendSuccessfulResponseDto extends ResponseDto {
-    private String status;
-    private String message;
+    public PhoneVerificationCodeSendSuccessfulResponseDto(String status,String message){
+        setStatus(status);
+        setMessage(message);
+    }
+
 }

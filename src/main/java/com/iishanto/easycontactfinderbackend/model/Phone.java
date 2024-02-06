@@ -1,12 +1,13 @@
 package com.iishanto.easycontactfinderbackend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.ColumnDefault;
 
-@ToString
+
 @Getter
 @Setter
 @Entity
@@ -18,7 +19,8 @@ public class Phone {
     @Column(nullable = false)
     private String number;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
     private User owner;
 
     @Column(nullable = false)
