@@ -57,6 +57,8 @@ public class User implements UserDetails {
 
     private String picture=null;
 
+    private Boolean isPhotoVerified=false;
+
     @OneToMany(fetch = FetchType.EAGER)
     @JsonBackReference
     private Set <Phone> phones;

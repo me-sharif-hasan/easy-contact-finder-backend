@@ -9,4 +9,5 @@ import lombok.ToString;
 @ToString(callSuper = true)
 public class UserRegistrationInfoDto extends UserDto{
     private String password;
+    private String confirmPassword;
 }

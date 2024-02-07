@@ -9,6 +9,7 @@ import com.iishanto.easycontactfinderbackend.dto.responseDtoImpl.RegistrationSuc
 import com.iishanto.easycontactfinderbackend.exception.LoginCredentialVerificationFailureException;
 import com.iishanto.easycontactfinderbackend.exception.RegistrationFailureException;
 import com.iishanto.easycontactfinderbackend.exception.UserNotExistsException;
+import com.iishanto.easycontactfinderbackend.exception.UserNotLoggedInException;
 import com.iishanto.easycontactfinderbackend.model.User;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,10 @@ public interface UserService {
     AuthenticationSuccess loginWithEmail(UserCredentialDto userCredentialDto) throws LoginCredentialVerificationFailureException, UserNotExistsException;
 
     User findUserByEmail(String email);
+    User getCurrentUser() throws UserNotLoggedInException;
     String getToken(User user);
 
     Boolean verify(UserVerificationCodeRequestDto userVerificationCodeRequestDto) throws UserNotExistsException;
+
+    void save(User user);
 }

@@ -9,6 +9,7 @@ import com.iishanto.easycontactfinderbackend.dto.responseDtoImpl.RegistrationSuc
 import com.iishanto.easycontactfinderbackend.exception.LoginCredentialVerificationFailureException;
 import com.iishanto.easycontactfinderbackend.exception.RegistrationFailureException;
 import com.iishanto.easycontactfinderbackend.exception.UserNotExistsException;
+import com.iishanto.easycontactfinderbackend.exception.UserNotLoggedInException;
 import com.iishanto.easycontactfinderbackend.model.User;
 import com.iishanto.easycontactfinderbackend.model.UserVerification;
 import com.iishanto.easycontactfinderbackend.repository.UserRepository;
@@ -18,6 +19,7 @@ import com.iishanto.easycontactfinderbackend.service.user.UserService;
 import com.iishanto.easycontactfinderbackend.service.user.registration.RegistrationService;
 import com.iishanto.easycontactfinderbackend.service.user.security.JwtService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 @Component
 @AllArgsConstructor
@@ -61,6 +63,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getCurrentUser() throws UserNotLoggedInException {
+        User user= (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(user==null) throw new UserNotLoggedInException("User not logged in");
+        return user;
+    }
+
+    @Override
     public String getToken(User user) {
         return jwtService.generateToken(user);
     }
@@ -79,4 +88,9 @@ public class UserServiceImpl implements UserService {
         }
         return false;
     }
+
+    public void save(User user){
+        userRepository.save(user);
+    }
+
 }

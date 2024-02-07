@@ -42,6 +42,10 @@ public class BasicRegistrationService implements RegistrationService {
             }
             User user=modelMapper.map(userDto,User.class);
             user.setPassword(passwordEncoder.encode(user.getPassword()));
+            UserVerification userVerification=new UserVerification();
+            //TODO: user verification
+            userVerification.setState("verified");
+            user.setUserVerification(userVerification);
             userRepository.save(user);
             System.out.println(user);
             return modelMapper.map(user,UserDto.class);

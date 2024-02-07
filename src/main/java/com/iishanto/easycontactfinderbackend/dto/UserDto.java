@@ -1,6 +1,9 @@
 package com.iishanto.easycontactfinderbackend.dto;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.iishanto.easycontactfinderbackend.dto.image.Base64ImageDto;
 import com.iishanto.easycontactfinderbackend.model.Phone;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -8,13 +11,15 @@ import lombok.ToString;
 import java.util.List;
 import java.util.Set;
 
-@Getter
-@Setter
+@Data
 public class UserDto {
     private String name;
     private String email;
     private String picture;
+    private Base64ImageDto base64Image;
+    private Boolean isPhotoVerified;
     private Set<PhoneDto> phones;
+    private UserVerificationDto userVerification;
     private String country;
     private Boolean usedSocialLogin=false;
 }

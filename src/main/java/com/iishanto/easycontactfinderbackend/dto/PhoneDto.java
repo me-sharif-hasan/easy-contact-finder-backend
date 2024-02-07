@@ -1,5 +1,6 @@
 package com.iishanto.easycontactfinderbackend.dto;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.iishanto.easycontactfinderbackend.model.PhoneVerification;
@@ -16,7 +17,5 @@ public class PhoneDto {
     private Long id;
     private String countryCode;
     private String number;
-    @JsonIgnore
-    private UserDto owner;
     private PhoneVerification phoneVerification;
 }

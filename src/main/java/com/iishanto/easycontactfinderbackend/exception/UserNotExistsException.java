@@ -7,7 +7,7 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @ToString
-public class UserNotExistsException extends Throwable {
+public class UserNotExistsException extends Exception {
     public UserNotExistsException(String message){
         super(message);
     }
