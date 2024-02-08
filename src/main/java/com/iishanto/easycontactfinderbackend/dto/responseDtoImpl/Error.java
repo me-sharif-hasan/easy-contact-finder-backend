@@ -1,7 +1,7 @@
 package com.iishanto.easycontactfinderbackend.dto.responseDtoImpl;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.iishanto.easycontactfinderbackend.dto.ResponseDto;
+import com.iishanto.easycontactfinderbackend.dto.server.ResponseDto;
 import lombok.Getter;
 import lombok.Setter;
 

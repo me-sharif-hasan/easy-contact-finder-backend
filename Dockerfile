@@ -1,27 +1,23 @@
-# Use a different OpenJDK version
-FROM openjdk:21-jdk-oraclelinux8
+# Use Ubuntu latest
+FROM ubuntu:latest
+
+# Update package repository and install necessary packages
+RUN apt-get update && \
+    apt-get install -y \
+    openjdk-21-jdk \
+    maven
 
 # Set working directory
 WORKDIR /app
 
-# Copy the Maven executable to the container
-COPY mvnw .
-COPY .mvn .mvn
+# Copy the entire project directory into the Docker container
+COPY . .
 
-# Copy the project object model (POM) file to download dependencies
-COPY pom.xml .
+# Build the Spring Boot application using Maven
+RUN mvn -f pom.xml clean package
 
-# Download dependencies for caching
-RUN ./mvnw dependency:go-offline
+# Expose the port the app runs on
+EXPOSE 8080
 
-# Copy the project source code
-COPY src src
-
-# Package the application
-RUN ./mvnw package
-
-# Expose the port that the Spring Boot application will run on
-EXPOSE 5000
-
-# Run the Spring Boot application
-CMD ["java", "-jar", "target/easy-contact-finder-backend-0.0.1-SNAPSHOT.jar"]
+# Define the command to run your application
+CMD ["java", "-jar", "target/PUST_3S.jar"]

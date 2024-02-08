@@ -1,6 +1,8 @@
-package com.iishanto.easycontactfinderbackend.dto;
+package com.iishanto.easycontactfinderbackend.dto.user.personal;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.iishanto.easycontactfinderbackend.dto.PhoneDto;
+import com.iishanto.easycontactfinderbackend.dto.UserVerificationDto;
 import com.iishanto.easycontactfinderbackend.dto.image.Base64ImageDto;
 import com.iishanto.easycontactfinderbackend.model.Phone;
 import lombok.Data;

@@ -1,4 +1,4 @@
-package com.iishanto.easycontactfinderbackend.dto;
+package com.iishanto.easycontactfinderbackend.dto.server;
 
 import lombok.Data;
 import lombok.Getter;

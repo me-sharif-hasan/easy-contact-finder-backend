@@ -1,7 +1,7 @@
 package com.iishanto.easycontactfinderbackend.service.user.registration.impl;
 
 import com.iishanto.easycontactfinderbackend.dto.UserCredentialDto;
-import com.iishanto.easycontactfinderbackend.dto.UserDto;
+import com.iishanto.easycontactfinderbackend.dto.user.personal.UserDto;
 import com.iishanto.easycontactfinderbackend.dto.UserRegistrationInfoDto;
 import com.iishanto.easycontactfinderbackend.exception.RegistrationFailureException;
 import com.iishanto.easycontactfinderbackend.model.User;

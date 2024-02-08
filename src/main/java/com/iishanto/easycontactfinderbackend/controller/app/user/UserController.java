@@ -1,27 +1,26 @@
 package com.iishanto.easycontactfinderbackend.controller.app.user;
 
-import com.iishanto.easycontactfinderbackend.dto.ResponseDto;
-import com.iishanto.easycontactfinderbackend.dto.UserDto;
+import com.iishanto.easycontactfinderbackend.dto.server.ResponseDto;
+import com.iishanto.easycontactfinderbackend.dto.user.personal.UserDto;
 import com.iishanto.easycontactfinderbackend.dto.image.Base64ImageDto;
 import com.iishanto.easycontactfinderbackend.dto.recognition.openCv.FaceRecognitionDataDto;
 import com.iishanto.easycontactfinderbackend.dto.responseDtoImpl.Error;
 import com.iishanto.easycontactfinderbackend.dto.responseDtoImpl.FileSavingErrorResponseDto;
 import com.iishanto.easycontactfinderbackend.dto.responseDtoImpl.FileSavingSuccessDto;
 import com.iishanto.easycontactfinderbackend.dto.responseDtoImpl.Success;
+import com.iishanto.easycontactfinderbackend.dto.server.error.ServerErrorResponseDto;
+import com.iishanto.easycontactfinderbackend.dto.server.success.ServerSuccessResponseDto;
 import com.iishanto.easycontactfinderbackend.exception.UserNotLoggedInException;
 import com.iishanto.easycontactfinderbackend.model.Phone;
-import com.iishanto.easycontactfinderbackend.model.PhoneVerification;
 import com.iishanto.easycontactfinderbackend.model.User;
 import com.iishanto.easycontactfinderbackend.service.user.UserService;
 import com.iishanto.easycontactfinderbackend.service.user.recognition.RecognitionService;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +31,24 @@ import java.util.List;
 public class UserController {
     UserService userService;
     RecognitionService recognitionService;
+    ModelMapper modelMapper;
+    @GetMapping
+    public ResponseEntity<ResponseDto> getUser(){
+        try{
+            User user=userService.getCurrentUser();
+            UserDto userDto=modelMapper.map(user,UserDto.class);
+            ServerSuccessResponseDto responseDto=new ServerSuccessResponseDto();
+            responseDto.setData(userDto);
+            responseDto.setMessage("Request for user is successful");
+            return new ResponseEntity<>(responseDto,HttpStatus.OK);
+        }catch (Exception e){
+            ServerErrorResponseDto errorResponseDto=new ServerErrorResponseDto();
+            errorResponseDto.setMessage("You are not logged in");
+            return new ResponseEntity<>(errorResponseDto,HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+
     @PostMapping("save-info")
     public ResponseEntity<ResponseDto> saveUserInfo(@RequestBody UserDto userDto){
         try{

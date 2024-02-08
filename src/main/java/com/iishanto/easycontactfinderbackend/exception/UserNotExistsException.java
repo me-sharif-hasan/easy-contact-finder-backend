@@ -1,6 +1,5 @@
 package com.iishanto.easycontactfinderbackend.exception;
 
-import com.iishanto.easycontactfinderbackend.dto.UserDto;
 import com.iishanto.easycontactfinderbackend.dto.UserRegistrationInfoDto;
 import lombok.*;
 

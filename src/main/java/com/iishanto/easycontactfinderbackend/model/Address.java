@@ -6,16 +6,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Data;
 
-import java.util.Date;
-
-@Data
 @Entity
-public class PhoneVerification {
+@Data
+public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String code;
-    private String status;
-    private Date expirationDate;
-    private Boolean isPublic=true;
 }

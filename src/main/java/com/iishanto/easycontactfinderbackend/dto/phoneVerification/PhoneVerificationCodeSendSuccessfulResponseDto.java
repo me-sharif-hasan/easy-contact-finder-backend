@@ -1,7 +1,6 @@
 package com.iishanto.easycontactfinderbackend.dto.phoneVerification;
 
-import com.iishanto.easycontactfinderbackend.dto.ResponseDto;
-import lombok.AllArgsConstructor;
+import com.iishanto.easycontactfinderbackend.dto.server.ResponseDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

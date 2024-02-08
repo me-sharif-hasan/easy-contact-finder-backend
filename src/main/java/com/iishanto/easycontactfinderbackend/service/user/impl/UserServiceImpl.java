@@ -1,7 +1,7 @@
 package com.iishanto.easycontactfinderbackend.service.user.impl;
 
 import com.iishanto.easycontactfinderbackend.dto.UserCredentialDto;
-import com.iishanto.easycontactfinderbackend.dto.UserDto;
+import com.iishanto.easycontactfinderbackend.dto.user.personal.UserDto;
 import com.iishanto.easycontactfinderbackend.dto.UserRegistrationInfoDto;
 import com.iishanto.easycontactfinderbackend.dto.request.UserVerificationCodeRequestDto;
 import com.iishanto.easycontactfinderbackend.dto.responseDtoImpl.AuthenticationSuccess;

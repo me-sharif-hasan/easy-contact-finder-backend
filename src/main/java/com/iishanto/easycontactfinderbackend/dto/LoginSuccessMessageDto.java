@@ -1,7 +1,8 @@
 package com.iishanto.easycontactfinderbackend.dto;
 
+import com.iishanto.easycontactfinderbackend.dto.user.personal.UserDto;
 import lombok.Data;
-import org.springframework.context.annotation.Primary;
+
 @Data
 public class LoginSuccessMessageDto {
     private String status="success";

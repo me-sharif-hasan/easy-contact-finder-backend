@@ -1,6 +1,5 @@
 package com.iishanto.easycontactfinderbackend.dto.responseDtoImpl;
 
-import com.iishanto.easycontactfinderbackend.dto.UserDto;
 import com.iishanto.easycontactfinderbackend.model.User;
 import lombok.Getter;
 import lombok.Setter;

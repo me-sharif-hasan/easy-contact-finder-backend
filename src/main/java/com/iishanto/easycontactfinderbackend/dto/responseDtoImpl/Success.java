@@ -1,7 +1,6 @@
 package com.iishanto.easycontactfinderbackend.dto.responseDtoImpl;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.iishanto.easycontactfinderbackend.dto.ResponseDto;
+import com.iishanto.easycontactfinderbackend.dto.server.ResponseDto;
 
 public abstract class Success extends ResponseDto {
     public Success(String message){

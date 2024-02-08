@@ -1,7 +1,6 @@
 package com.iishanto.easycontactfinderbackend.service.user.auth.google.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.iishanto.easycontactfinderbackend.dto.UserDto;
+import com.iishanto.easycontactfinderbackend.dto.user.personal.UserDto;
 import com.iishanto.easycontactfinderbackend.dto.UserCredentialDto;
 import com.iishanto.easycontactfinderbackend.dto.UserRegistrationInfoDto;
 import com.iishanto.easycontactfinderbackend.exception.LoginCredentialVerificationFailureException;
@@ -9,10 +8,8 @@ import com.iishanto.easycontactfinderbackend.exception.UserNotExistsException;
 import com.iishanto.easycontactfinderbackend.model.User;
 import com.iishanto.easycontactfinderbackend.repository.UserRepository;
 import com.iishanto.easycontactfinderbackend.service.user.auth.google.GoogleAuthServices;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;

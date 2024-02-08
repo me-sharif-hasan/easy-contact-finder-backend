@@ -1,6 +1,5 @@
 package com.iishanto.easycontactfinderbackend.controller.app.phones;
 
-import com.iishanto.easycontactfinderbackend.dto.UserDto;
 import com.iishanto.easycontactfinderbackend.dto.phoneVerification.PhoneVerificationCodeSendSuccessfulResponseDto;
 import com.iishanto.easycontactfinderbackend.dto.phoneVerification.PhoneVerificationRequestReceiverDto;
 import com.iishanto.easycontactfinderbackend.dto.responseDtoImpl.NormalSuccessResponseDto;

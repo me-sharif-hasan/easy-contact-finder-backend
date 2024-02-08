@@ -1,6 +1,5 @@
 package com.iishanto.easycontactfinderbackend.service.user.auth;
 
-import com.iishanto.easycontactfinderbackend.dto.UserDto;
 import com.iishanto.easycontactfinderbackend.dto.UserCredentialDto;
 import com.iishanto.easycontactfinderbackend.exception.LoginCredentialVerificationFailureException;
 import com.iishanto.easycontactfinderbackend.exception.UserNotExistsException;

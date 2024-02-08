@@ -1,13 +1,12 @@
 package com.iishanto.easycontactfinderbackend.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import com.iishanto.easycontactfinderbackend.dto.user.personal.UserDto;
+import lombok.Data;
 import lombok.ToString;
 
-@Getter
-@Setter
+@Data
 @ToString(callSuper = true)
-public class UserRegistrationInfoDto extends UserDto{
+public class UserRegistrationInfoDto extends UserDto {
     private String password;
     private String confirmPassword;
 }

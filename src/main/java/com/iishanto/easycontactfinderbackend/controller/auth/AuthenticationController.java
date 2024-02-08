@@ -1,10 +1,8 @@
 package com.iishanto.easycontactfinderbackend.controller.auth;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iishanto.easycontactfinderbackend.dto.LoginSuccessMessageDto;
-import com.iishanto.easycontactfinderbackend.dto.UserDto;
+import com.iishanto.easycontactfinderbackend.dto.user.personal.UserDto;
 import com.iishanto.easycontactfinderbackend.dto.UserCredentialDto;
 import com.iishanto.easycontactfinderbackend.dto.UserRegistrationInfoDto;
 import com.iishanto.easycontactfinderbackend.dto.responseDtoImpl.AuthenticationErrorDto;
@@ -17,14 +15,10 @@ import com.iishanto.easycontactfinderbackend.exception.UserNotExistsException;
 import com.iishanto.easycontactfinderbackend.model.User;
 import com.iishanto.easycontactfinderbackend.service.user.auth.google.GoogleAuthServices;
 import com.iishanto.easycontactfinderbackend.service.user.UserService;
-import com.iishanto.easycontactfinderbackend.service.user.registration.RegistrationService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
