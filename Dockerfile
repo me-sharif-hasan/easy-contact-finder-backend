@@ -20,4 +20,4 @@ RUN mvn -f pom.xml clean package
 EXPOSE 8080
 
 # Define the command to run your application
-CMD ["mvn", "spring-boot:run"]
+ENTRYPOINT ["mvn", "spring-boot:run"]
