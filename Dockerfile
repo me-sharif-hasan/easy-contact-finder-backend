@@ -20,4 +20,4 @@ RUN mvn -f pom.xml clean package
 EXPOSE 8080
 
 # Define the command to run your application
-CMD ["java", "-jar", "*.jar"]
+CMD ["java", "-jar", "easy-contact-finder-backend-0.0.1-SNAPSHOT.jar"]
