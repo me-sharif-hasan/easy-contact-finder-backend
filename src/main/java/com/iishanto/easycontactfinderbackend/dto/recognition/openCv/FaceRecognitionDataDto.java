@@ -1,5 +1,6 @@
 package com.iishanto.easycontactfinderbackend.dto.recognition.openCv;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.iishanto.easycontactfinderbackend.dto.image.Base64ImageDto;
 import com.iishanto.easycontactfinderbackend.utility.Base64ImageSerializer;
@@ -13,6 +14,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class FaceRecognitionDataDto {
     /**
      * {
@@ -42,4 +44,5 @@ public class FaceRecognitionDataDto {
     private String name;
     private String nationality="Bangladeshi";
     private String notes="App user";
+    private String search_mode="ACCURATE";
 }
