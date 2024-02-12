@@ -22,6 +22,7 @@ public interface UserService {
     AuthenticationSuccess loginWithEmail(UserCredentialDto userCredentialDto) throws LoginCredentialVerificationFailureException, UserNotExistsException;
 
     User findUserByEmail(String email);
+    User findById(Long id) throws UserNotExistsException;
     User getCurrentUser() throws UserNotLoggedInException;
     String getToken(User user);
 

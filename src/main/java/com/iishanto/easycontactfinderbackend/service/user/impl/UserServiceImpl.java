@@ -21,6 +21,9 @@ import com.iishanto.easycontactfinderbackend.service.user.security.JwtService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
+
 @Component
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -87,6 +90,13 @@ public class UserServiceImpl implements UserService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public User findById(Long id) throws UserNotExistsException{
+        Optional<User> userOptional=userRepository.findById(id);
+        if(userOptional.isPresent()) return userOptional.get();
+        else throw new UserNotExistsException("User with ID: "+id+" not exists");
     }
 
     public void save(User user){

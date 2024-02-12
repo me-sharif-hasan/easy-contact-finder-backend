@@ -10,6 +10,7 @@ import com.iishanto.easycontactfinderbackend.dto.responseDtoImpl.FileSavingSucce
 import com.iishanto.easycontactfinderbackend.dto.responseDtoImpl.Success;
 import com.iishanto.easycontactfinderbackend.dto.server.error.ServerErrorResponseDto;
 import com.iishanto.easycontactfinderbackend.dto.server.success.ServerSuccessResponseDto;
+import com.iishanto.easycontactfinderbackend.exception.UserNotExistsException;
 import com.iishanto.easycontactfinderbackend.exception.UserNotLoggedInException;
 import com.iishanto.easycontactfinderbackend.model.Phone;
 import com.iishanto.easycontactfinderbackend.model.User;
@@ -94,6 +95,37 @@ public class UserController {
         base64ImageDtoList.add(picture);
         faceRecognitionDataDto.setImages(base64ImageDtoList);
         return faceRecognitionDataDto;
+    }
+
+    @PostMapping(path = "search-by-image")
+    public ResponseEntity<Object> searchUser(@RequestBody Base64ImageDto base64ImageDto){
+        System.out.println("GETTING FACES");
+        try{
+            List <UserDto> userDtos=recognitionService.predict(base64ImageDto);
+            List <UserDto> userDtos1=new ArrayList<>();
+            for (UserDto userDto:userDtos){
+                System.out.println("User id: "+userDto.getId());
+                try{
+                    User user=userService.findById(userDto.getId());
+                    Float score=userDto.getScore();
+                    userDto=modelMapper.map(user,UserDto.class);
+                    userDto.setScore(score);
+                    userDtos1.add(userDto);
+                }catch (UserNotExistsException e){
+
+                }
+            }
+            ServerSuccessResponseDto responseDto=new ServerSuccessResponseDto();
+            responseDto.setMessage("Face search success");
+            responseDto.setData(userDtos1);
+            System.out.println(userDtos1);
+            return new ResponseEntity<>(responseDto,HttpStatus.OK);
+        }catch (Exception e){
+            e.printStackTrace();
+            ServerErrorResponseDto responseDto=new ServerErrorResponseDto();
+            responseDto.setMessage("Face search failed");
+            return new ResponseEntity<>(responseDto,HttpStatus.OK);
+        }
     }
 
 }

@@ -1,5 +1,6 @@
 package com.iishanto.easycontactfinderbackend.dto.user.personal;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.iishanto.easycontactfinderbackend.dto.PhoneDto;
 import com.iishanto.easycontactfinderbackend.dto.UserVerificationDto;
@@ -14,7 +15,9 @@ import java.util.List;
 import java.util.Set;
 
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserDto {
+    private Long id;
     private String name;
     private String email;
     private String picture;
@@ -24,4 +27,5 @@ public class UserDto {
     private UserVerificationDto userVerification;
     private String country;
     private Boolean usedSocialLogin=false;
+    private Float score;
 }
