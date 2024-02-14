@@ -16,6 +16,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -37,6 +38,7 @@ public class User implements UserDetails {
     private String email;
 
     @Column(nullable = false)
+
     private String password;
 
     @Column(nullable = false)
@@ -68,6 +70,8 @@ public class User implements UserDetails {
     @OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private UserVerification userVerification;
 
+    @OneToMany
+    private List<PhoneAlias> savedContacts;
 
 
     @Override

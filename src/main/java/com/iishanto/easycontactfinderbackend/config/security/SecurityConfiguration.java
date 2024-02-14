@@ -1,4 +1,4 @@
-package com.iishanto.easycontactfinderbackend.config;
+package com.iishanto.easycontactfinderbackend.config.security;
 
 import com.iishanto.easycontactfinderbackend.config.filter.JwtAuthenticationFilter;
 import lombok.AllArgsConstructor;

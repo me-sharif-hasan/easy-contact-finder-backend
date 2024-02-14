@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -53,7 +54,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                             userDetails.getAuthorities()
                     );
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    com.iishanto.easycontactfinderbackend.model.User user= (com.iishanto.easycontactfinderbackend.model.User) authToken.getPrincipal();
+                    if(user.getIsPhotoVerified()==null||!user.getIsPhotoVerified()){
+                        System.out.println(request.getRequestURL());
+                    }
                     SecurityContextHolder.getContext().setAuthentication(authToken);
+
                 }else{
 //                    throw new IOException("Invalid JWT token");
                 }

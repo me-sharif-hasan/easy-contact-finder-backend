@@ -2,29 +2,58 @@ package com.iishanto.easycontactfinderbackend.controller.app.phones;
 
 import com.iishanto.easycontactfinderbackend.dto.phoneVerification.PhoneVerificationCodeSendSuccessfulResponseDto;
 import com.iishanto.easycontactfinderbackend.dto.phoneVerification.PhoneVerificationRequestReceiverDto;
+import com.iishanto.easycontactfinderbackend.dto.request.ContactAliasDto;
 import com.iishanto.easycontactfinderbackend.dto.responseDtoImpl.NormalSuccessResponseDto;
+import com.iishanto.easycontactfinderbackend.dto.server.ResponseDto;
+import com.iishanto.easycontactfinderbackend.dto.server.error.ServerErrorResponseDto;
+import com.iishanto.easycontactfinderbackend.dto.server.success.ServerSuccessResponseDto;
+import com.iishanto.easycontactfinderbackend.model.PhoneAlias;
 import com.iishanto.easycontactfinderbackend.model.User;
+import com.iishanto.easycontactfinderbackend.service.phone.PhoneAliasService;
 import com.iishanto.easycontactfinderbackend.service.phone.PhoneService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/phone")
-public class PhoneVerificationController {
+public class PhoneController {
     PhoneService phoneService;
+    PhoneAliasService phoneAliasService;
+
+
+
+    @PostMapping(path = "save-alias")
+    public ResponseEntity<ResponseDto> saveContact(@RequestBody List<ContactAliasDto> aliasDtos){
+        try{
+            if (aliasDtos.isEmpty()) throw new Exception("No contact exists");
+            User user= (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            phoneAliasService.savePhoneAliases(aliasDtos,user);
+            ResponseDto responseDto=new ServerSuccessResponseDto();
+            responseDto.setMessage("Contact"+(aliasDtos.size()>1?"s":"")+" saved successfully");
+            return new ResponseEntity<>(responseDto,HttpStatus.OK);
+        }catch (Exception e){
+            e.printStackTrace();
+            ResponseDto responseDto=new ServerErrorResponseDto();
+            responseDto.setMessage("Error saving your contact.");
+            return new ResponseEntity<>(responseDto,HttpStatus.OK);
+        }
+    }
+
+
+
+
     @PostMapping(path = "send-verification-code")
     public ResponseEntity<Object> sendVerificationCode(@RequestBody PhoneVerificationRequestReceiverDto dto){
-        //TODO: send verification code
-        //Get the DTO
-        //update phone entity verification log
         System.out.println(dto);
         PhoneVerificationCodeSendSuccessfulResponseDto phoneVerificationCodeSendSuccessfulResponseDto= phoneService.sendVerificationCode(dto);
         return new ResponseEntity<>(phoneVerificationCodeSendSuccessfulResponseDto, HttpStatus.OK);
     }
-
     @PostMapping(path = "verify")
     public ResponseEntity<Object> verify(@RequestBody PhoneVerificationRequestReceiverDto dto){
         PhoneVerificationCodeSendSuccessfulResponseDto phoneVerificationCodeSendSuccessfulResponseDto=new PhoneVerificationCodeSendSuccessfulResponseDto("success","Your account is successfully verified");
@@ -35,8 +64,6 @@ public class PhoneVerificationController {
         }
         return new ResponseEntity<>(phoneVerificationCodeSendSuccessfulResponseDto,HttpStatus.OK);
     }
-
-
     @PostMapping(path = "revert")
     public ResponseEntity<Object> revert(){
         User user= (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
