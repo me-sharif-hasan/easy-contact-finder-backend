@@ -1,17 +1,11 @@
 package com.iishanto.easycontactfinderbackend.dto.user.personal;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.iishanto.easycontactfinderbackend.dto.PhoneDto;
+import com.iishanto.easycontactfinderbackend.dto.phone.personal.PhoneDto;
 import com.iishanto.easycontactfinderbackend.dto.UserVerificationDto;
 import com.iishanto.easycontactfinderbackend.dto.image.Base64ImageDto;
-import com.iishanto.easycontactfinderbackend.model.Phone;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
-import java.util.List;
 import java.util.Set;
 
 @Data

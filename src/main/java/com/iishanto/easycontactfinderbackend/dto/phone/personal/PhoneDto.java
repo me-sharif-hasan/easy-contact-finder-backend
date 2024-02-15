@@ -1,4 +1,4 @@
-package com.iishanto.easycontactfinderbackend.dto;
+package com.iishanto.easycontactfinderbackend.dto.phone.personal;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;

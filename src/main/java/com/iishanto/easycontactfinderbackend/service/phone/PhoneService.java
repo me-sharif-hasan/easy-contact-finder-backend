@@ -20,7 +20,7 @@ import java.util.Optional;
 public class PhoneService {
     private PhoneRepository phoneRepository;
     private UserRepository userRepository;
-
+    private SmsVerificationService smsVerificationService;
 
     public PhoneVerificationCodeSendSuccessfulResponseDto sendVerificationCode(PhoneVerificationRequestReceiverDto phoneVerificationRequestReceiverDto){
         String phoneNumber=phoneVerificationRequestReceiverDto.getPhone();
@@ -43,13 +43,15 @@ public class PhoneService {
             System.out.println("Phone already exists");
             authPhone=phone.get();
         }
-        String verificationCode= "12345";//send it using a service will be implemented latter
-        PhoneVerification phoneVerification=new PhoneVerification();
-        phoneVerification.setCode(verificationCode);
-        authPhone.setPhoneVerification(phoneVerification);
-        authPhone.getPhoneVerification().setStatus("unverified");
-        phoneRepository.save(authPhone);
-        return new PhoneVerificationCodeSendSuccessfulResponseDto("success","A code is send in your phone number");
+        try{
+            PhoneVerification phoneVerification=smsVerificationService.sendAndGetVerificationCode(phoneNumber);
+            authPhone.setPhoneVerification(phoneVerification);
+            authPhone.getPhoneVerification().setStatus("unverified");
+            phoneRepository.save(authPhone);
+            return new PhoneVerificationCodeSendSuccessfulResponseDto("success","A code is send in your phone number");
+        }catch (Exception e){
+            return new PhoneVerificationCodeSendSuccessfulResponseDto("error","Sending verification code failure");
+        }
     }
 
     public Boolean verify(PhoneVerificationRequestReceiverDto dto) {

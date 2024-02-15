@@ -1,5 +1,6 @@
 package com.iishanto.easycontactfinderbackend.controller.app.user;
 
+import com.iishanto.easycontactfinderbackend.dto.phone.alias.PhoneAliasDto;
 import com.iishanto.easycontactfinderbackend.dto.server.ResponseDto;
 import com.iishanto.easycontactfinderbackend.dto.user.personal.UserDto;
 import com.iishanto.easycontactfinderbackend.dto.image.Base64ImageDto;
@@ -13,7 +14,9 @@ import com.iishanto.easycontactfinderbackend.dto.server.success.ServerSuccessRes
 import com.iishanto.easycontactfinderbackend.exception.UserNotExistsException;
 import com.iishanto.easycontactfinderbackend.exception.UserNotLoggedInException;
 import com.iishanto.easycontactfinderbackend.model.Phone;
+import com.iishanto.easycontactfinderbackend.model.PhoneAlias;
 import com.iishanto.easycontactfinderbackend.model.User;
+import com.iishanto.easycontactfinderbackend.service.phone.PhoneAliasService;
 import com.iishanto.easycontactfinderbackend.service.user.UserService;
 import com.iishanto.easycontactfinderbackend.service.user.recognition.RecognitionService;
 import lombok.AllArgsConstructor;
@@ -32,6 +35,7 @@ import java.util.List;
 public class UserController {
     UserService userService;
     RecognitionService recognitionService;
+    PhoneAliasService phoneAliasService;
     ModelMapper modelMapper;
     @GetMapping
     public ResponseEntity<ResponseDto> getUser(){
@@ -47,6 +51,20 @@ public class UserController {
             errorResponseDto.setMessage("You are not logged in");
             return new ResponseEntity<>(errorResponseDto,HttpStatus.UNAUTHORIZED);
         }
+    }
+
+    @GetMapping(path = "saved-contacts")
+    public ResponseEntity<ResponseDto> getAliases(){
+        User user= (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<PhoneAlias> phoneAliases=phoneAliasService.findByOwner(user);
+        List<PhoneAliasDto> phoneAliasDtos=new ArrayList<>();
+        for (PhoneAlias phoneAlias:phoneAliases){
+            PhoneAliasDto phoneAliasDto=modelMapper.map(phoneAlias,PhoneAliasDto.class);
+            phoneAliasDtos.add(phoneAliasDto);
+        }
+        ServerSuccessResponseDto serverSuccessResponseDto=new ServerSuccessResponseDto();
+        serverSuccessResponseDto.setData(phoneAliasDtos);
+        return new ResponseEntity<>(serverSuccessResponseDto,HttpStatus.OK);
     }
 
 
