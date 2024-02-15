@@ -25,4 +25,6 @@ public class PhoneAlias {
     private Phone aliasTarget;
     @ManyToOne
     private User aliasOwner;
+    @ManyToOne
+    private User person;
 }

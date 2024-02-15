@@ -70,8 +70,8 @@ public class User implements UserDetails {
     @OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private UserVerification userVerification;
 
-    @OneToMany
-    private List<PhoneAlias> savedContacts;
+//    @OneToMany
+//    private List<PhoneAlias> savedContacts;
 
 
     @Override

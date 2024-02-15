@@ -13,6 +13,7 @@ public class PhoneAliasDto {
     private Long id;
     private String number;
     private String name;
+    private PublicUserDto person;
     private PublicPhoneDto aliasTarget;
     private PublicUserDto aliasOwner;
 }

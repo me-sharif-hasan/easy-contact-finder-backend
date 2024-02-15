@@ -2,6 +2,7 @@ package com.iishanto.easycontactfinderbackend.controller.app.phones;
 
 import com.iishanto.easycontactfinderbackend.dto.phoneVerification.PhoneVerificationCodeSendSuccessfulResponseDto;
 import com.iishanto.easycontactfinderbackend.dto.phoneVerification.PhoneVerificationRequestReceiverDto;
+import com.iishanto.easycontactfinderbackend.dto.request.ContactAliasCollectionDto;
 import com.iishanto.easycontactfinderbackend.dto.request.ContactAliasDto;
 import com.iishanto.easycontactfinderbackend.dto.responseDtoImpl.NormalSuccessResponseDto;
 import com.iishanto.easycontactfinderbackend.dto.server.ResponseDto;
@@ -29,13 +30,14 @@ public class PhoneController {
 
 
     @PostMapping(path = "save-alias")
-    public ResponseEntity<ResponseDto> saveContact(@RequestBody List<ContactAliasDto> aliasDtos){
+    public ResponseEntity<ResponseDto> saveContact(@RequestBody ContactAliasCollectionDto contactAliasCollectionDto){
+        System.out.printf(contactAliasCollectionDto.toString());
         try{
-            if (aliasDtos.isEmpty()) throw new Exception("No contact exists");
+            if (contactAliasCollectionDto.getAliases().isEmpty()) throw new Exception("No contact exists");
             User user= (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            phoneAliasService.savePhoneAliases(aliasDtos,user);
+            int total=phoneAliasService.savePhoneAliases(contactAliasCollectionDto,user).size();
             ResponseDto responseDto=new ServerSuccessResponseDto();
-            responseDto.setMessage("Contact"+(aliasDtos.size()>1?"s":"")+" saved successfully");
+            responseDto.setMessage(total+" contacts saved successfully");
             return new ResponseEntity<>(responseDto,HttpStatus.OK);
         }catch (Exception e){
             e.printStackTrace();
