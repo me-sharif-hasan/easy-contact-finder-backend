@@ -9,7 +9,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.Random;
 import java.util.UUID;
+import java.util.random.RandomGenerator;
+
 @Component
 public class AlphaSmsVerificationServiceImpl implements SmsVerificationService {
     String base;
@@ -29,6 +32,7 @@ public class AlphaSmsVerificationServiceImpl implements SmsVerificationService {
             String verificationCode= getCode();
             PhoneVerification phoneVerification=new PhoneVerification();
             phoneVerification.setCode(verificationCode);
+//            phoneVerification.setCode("29269");
             String response=restClient.get().uri(getRequest(phone,"Your contact buddy verification code is: "+verificationCode)).retrieve().body(String.class);
             JsonNode jsonNode=new ObjectMapper().convertValue(response,JsonNode.class);
             if(jsonNode.get("error_message")!=null) throw new Exception("Failure sending verification code");
@@ -42,7 +46,7 @@ public class AlphaSmsVerificationServiceImpl implements SmsVerificationService {
 
 
     private String getCode(){
-        return UUID.randomUUID().toString().substring(0,5);
+        return String.valueOf((new Random(System.nanoTime())).nextInt(10000,99999));
     }
 
     private String getRequest(String phone,String message){

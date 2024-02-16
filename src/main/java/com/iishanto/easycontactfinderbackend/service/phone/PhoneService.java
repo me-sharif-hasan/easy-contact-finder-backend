@@ -22,14 +22,14 @@ public class PhoneService {
     private UserRepository userRepository;
     private SmsVerificationService smsVerificationService;
 
-    public PhoneVerificationCodeSendSuccessfulResponseDto sendVerificationCode(PhoneVerificationRequestReceiverDto phoneVerificationRequestReceiverDto){
+    public PhoneVerificationCodeSendSuccessfulResponseDto sendVerificationCode(PhoneVerificationRequestReceiverDto phoneVerificationRequestReceiverDto) throws Exception{
         String phoneNumber=phoneVerificationRequestReceiverDto.getPhone();
         Optional<Phone> phone=phoneRepository.findPhoneByNumber(phoneNumber);
+        //attach with current user
+        User user= (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Phone authPhone=null;
         if(phone.isEmpty()){
             System.out.println("Phone does not exists");
-            //attach with current user
-            User user= (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             if(user==null) throw new InvalidRequestStateException("Invalid request, authentication failed");
             Phone newPhone=new Phone();
             newPhone.setNumber(phoneNumber);
@@ -44,13 +44,17 @@ public class PhoneService {
             authPhone=phone.get();
         }
         try{
+            //check if this phone number belongs to other user
+            if (user==null|| !Objects.equals(authPhone.getOwner().getId(), user.getId())){
+                throw new Exception("This number is already existed and not belongs to you");
+            }
             PhoneVerification phoneVerification=smsVerificationService.sendAndGetVerificationCode(phoneNumber);
             authPhone.setPhoneVerification(phoneVerification);
             authPhone.getPhoneVerification().setStatus("unverified");
             phoneRepository.save(authPhone);
             return new PhoneVerificationCodeSendSuccessfulResponseDto("success","A code is send in your phone number");
         }catch (Exception e){
-            return new PhoneVerificationCodeSendSuccessfulResponseDto("error","Sending verification code failure");
+            throw new Exception("Sending verification code failure. Do this number already exists?");
         }
     }
 

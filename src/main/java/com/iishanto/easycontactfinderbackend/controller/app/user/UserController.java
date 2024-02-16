@@ -75,6 +75,7 @@ public class UserController {
             User user= (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             //prevent photo verification without phone verification
             Boolean isPhoneVerificationAvailable=false;
+            System.out.println(user.getPhones()+" "+user.getId());
             if(user.getPhones()==null|| user.getPhones().isEmpty()){
                 isPhoneVerificationAvailable=false;
             }else{
@@ -87,7 +88,11 @@ public class UserController {
             }
             if(!isPhoneVerificationAvailable) throw new Exception("You must verify your phone number first");
             user.setIsPhotoVerified(true);
-            recognitionService.saveImage(faceRecognitionDataDto);
+            try{
+                recognitionService.saveImage(faceRecognitionDataDto);
+            }catch (Exception e){
+                recognitionService.updateImage(faceRecognitionDataDto);
+            }
             Success fileSavingSuccessDto=new FileSavingSuccessDto();
             fileSavingSuccessDto.setStatus("success");
             fileSavingSuccessDto.setMessage("Face data verified successfully");

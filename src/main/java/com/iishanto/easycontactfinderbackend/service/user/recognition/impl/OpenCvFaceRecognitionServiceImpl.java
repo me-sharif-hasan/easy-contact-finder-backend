@@ -40,9 +40,14 @@ public class OpenCvFaceRecognitionServiceImpl extends RecognitionService {
     }
     @Override
     public void saveImage(FaceRecognitionDataDto faceRecognitionDataDto) throws Exception {
-        System.out.println(faceRecognitionDataDto);
+//        System.out.println(faceRecognitionDataDto);
         String response = restClient.post().uri("/person").accept(MediaType.APPLICATION_JSON).body(faceRecognitionDataDto).retrieve().body(String.class);
         System.out.println("OPEN CV SAYS "+response);
+    }
+
+    public void updateImage(FaceRecognitionDataDto faceRecognitionDataDto) throws Exception{
+        String response = restClient.patch().uri("/person").accept(MediaType.APPLICATION_JSON).body(faceRecognitionDataDto).retrieve().body(String.class);
+        System.out.println("OPEN CV UPDATES: "+response);
     }
 
     @Override

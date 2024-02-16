@@ -50,36 +50,5 @@ public class PhoneController {
 
 
 
-    @PostMapping(path = "send-verification-code")
-    public ResponseEntity<Object> sendVerificationCode(@RequestBody PhoneVerificationRequestReceiverDto dto){
-        System.out.println(dto);
-        PhoneVerificationCodeSendSuccessfulResponseDto phoneVerificationCodeSendSuccessfulResponseDto= phoneService.sendVerificationCode(dto);
-        return new ResponseEntity<>(phoneVerificationCodeSendSuccessfulResponseDto, HttpStatus.OK);
-    }
-    @PostMapping(path = "verify")
-    public ResponseEntity<Object> verify(@RequestBody PhoneVerificationRequestReceiverDto dto){
-        PhoneVerificationCodeSendSuccessfulResponseDto phoneVerificationCodeSendSuccessfulResponseDto=new PhoneVerificationCodeSendSuccessfulResponseDto("success","Your account is successfully verified");
-        if(!phoneService.verify(dto)){
-            System.out.println("ERROR");
-            phoneVerificationCodeSendSuccessfulResponseDto.setStatus("error");
-            phoneVerificationCodeSendSuccessfulResponseDto.setMessage("Verification code mismatch");
-        }
-        return new ResponseEntity<>(phoneVerificationCodeSendSuccessfulResponseDto,HttpStatus.OK);
-    }
-    @PostMapping(path = "revert")
-    public ResponseEntity<Object> revert(){
-        User user= (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        NormalSuccessResponseDto normalSuccessResponseDto=new NormalSuccessResponseDto();
-        if(user==null){
-            normalSuccessResponseDto.setStatus("error");
-            normalSuccessResponseDto.setStatus("You are not logged in");
-            return new ResponseEntity<>(normalSuccessResponseDto,HttpStatus.BAD_REQUEST);
-        }else{
-            user.setPhones(null);
-            //TODO: Also clear user verification
-//            user.setUserVerification(null);
-            normalSuccessResponseDto.setStatus("success");
-            return new ResponseEntity<>(normalSuccessResponseDto,HttpStatus.OK);
-        }
-    }
+
 }

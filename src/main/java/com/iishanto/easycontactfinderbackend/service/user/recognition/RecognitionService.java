@@ -13,5 +13,6 @@ import java.util.List;
 @Service
 public abstract class RecognitionService {
     public abstract void saveImage(FaceRecognitionDataDto base64Image) throws Exception;
+    public abstract void updateImage(FaceRecognitionDataDto base64Image) throws Exception;
     public abstract List<UserDto> predict(Base64ImageDto base64Image) throws JsonProcessingException;
 }
